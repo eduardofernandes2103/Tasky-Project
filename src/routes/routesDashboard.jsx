@@ -7,6 +7,15 @@ const routesDashboard = () => {
             <Route path='/dashboard/groups'>
                 <Groups/>
             </Route>
+            {/* <Route path='/dashboard/groups'>
+                <Group/>
+            </Route>
+            <Route path='/dashboard/groups'>
+                <Home/>
+            </Route>
+            <Route path='/dashboard/groups'>
+                <Habitsd/>
+            </Route> */}
         </Switch>
     )
 }
