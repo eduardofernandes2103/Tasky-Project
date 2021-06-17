@@ -100,7 +100,7 @@ export const GroupContainer = styled.div`
 export const GoalsContainer = styled.div`
     background-color: var(--dark-grey);
     width: 100%;
-    height: 170px;
+    height: 24vh;
     margin: 10px 0;
     display: flex;
     border-radius: 8px;

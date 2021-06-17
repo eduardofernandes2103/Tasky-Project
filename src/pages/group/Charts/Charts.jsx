@@ -15,8 +15,8 @@ import { Doughnut} from 'react-chartjs-2';
                         label: "Taskys Status",
                         data:[todoData,doneData],
                         backgroundColor:[
+                            '#42b1dc',
                             '#f20505',
-                            '#42b1dc'
                         ],
                         borderWidth:1,
                     }
