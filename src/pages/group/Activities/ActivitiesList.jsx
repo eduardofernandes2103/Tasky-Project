@@ -6,44 +6,97 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Input from '../../../components/Input/Input.jsx';
-import { useContext } from 'react';
-import { ActivitieContext } from '../../../providers/ActivitiesCtx'
 import { Fade, Modal } from '@material-ui/core';
+import { toast } from 'react-toastify';
+import { api } from '../../../service/api';
 
-const ActivitiesList = () => {
+const ActivitiesList = ({specifGroup}) => {
 
-    const { activitiesRenderList, 
-            deleteActivitie, 
-            addActivitie
-        } = useContext(ActivitieContext)
 
-    const [activitiesPopUp, setActivitiesPopUp] = useState(false)
-
-    const handleCloseModal = () => {
-        setActivitiesPopUp(false);
-    }
-
-    const handleNewActivitie = (data) => {
-        setActivitiesPopUp(false)
-        // return setNewActivitiesData(data) -> puxar no provider
-    }
-
-    useEffect( () => {
-        setActivitiesPopUp(false)
-    }, [activitiesRenderList])
-
+    // Área de declarações e schema -------------------------------------------------
     const formSchema = yup.object().shape({
         title: yup.string().required('This field is required'),
     })
 
-    const { register, handleSubmit, formState: { error } } = useForm({ resolver: yupResolver(formSchema) })
+    const { register, handleSubmit, formState: { error } 
+            } = useForm({ resolver: yupResolver(formSchema) 
+        })
+    
+    const [activitiesRenderList, setActivitiesRenderList] = useState([])
+    
+    const userToken = JSON.parse( localStorage.getItem('@tasky/login/token') );
+
+    const [activitiesPopUp, setActivitiesPopUp] = useState(false)
+// ---------------------------------------------------------------------------------
+
+
+// Área de Funções que manipulam as Activities-------------------------------------------
+    const handleLoadActivities = (id) => {
+
+        api.get(`/groups/${id}/`, {
+            headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userToken}`,
+            },
+            })
+            .then(response => setActivitiesRenderList(response.data.activities))
+
+    };       
+
+    const addActivitie = ({title}) => {
+        const activitieAddTitle = {
+            title,
+            realization_time: "2021-03-10T15:00:00Z",
+            group: specifGroup.id
+        }
+        
+        api.post(
+            '/activities/',
+            activitieAddTitle,
+            {
+                headers: {
+                    Authorization: `Bearer ${userToken}`,
+                },
+            }
+        )
+        .then((_)=>{
+            toast.success(`Added!`)
+            handleLoadActivities(specifGroup.id)
+            })
+        .catch((_)=> toast.error("Something went wrong, try again!"))
+    }
+
+    const deleteActivitie = (activitie) =>{
+        api.delete(
+            `/activities/${activitie.id}/`, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${userToken}`,
+                    },
+            })
+                .then((_)=>{
+                    toast.success(`${activitie.title} deleted`)
+                    handleLoadActivities(specifGroup.id)
+                })
+                .catch((_)=> toast.error("Something went wrong, try again!"))
+    }
+// --------------------------------------------------------------------------------
+
+
+// Função de Load das atividades e outras funçoes. ----
+    handleLoadActivities(specifGroup.id);
+
+    const handleCloseModal = () => {
+        setActivitiesPopUp(false);
+    }
+// -----------------------------------------------------
 
     return(
             <>
                 <div className="groupActivities">
 
                     <div className="activitiesTitle">   
-                        <h3>Activities</h3>
+                        <h3>Activities</h3>                        
                         <Button
                             setSize={"large"}
                             setColor={"var(--blue)"}   
