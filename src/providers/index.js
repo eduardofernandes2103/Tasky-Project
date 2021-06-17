@@ -1,20 +1,20 @@
 import { WindowSizeProvider } from "./windowSize";
 import { FormDataProvider } from './formData';
 import { LoginRequestProvider } from "./login";
-import { NewGoalProvider } from "./newGoal";
+import { GoalsRequestsProvider } from "./addNewGoal";
 import { GroupsProvider } from './groups';
 
-const providers = ({children}) => {
+const providers = ({ children }) => {
     return(
         <LoginRequestProvider>
-            <WindowSizeProvider>
-                <NewGoalProvider>
+            <WindowSizeProvider> 
+                <GoalsRequestsProvider>  
                     <FormDataProvider>
                         <GroupsProvider>
                             {children}
                         </GroupsProvider>
                     </FormDataProvider>
-                </NewGoalProvider>
+                </GoalsRequestsProvider>
             </WindowSizeProvider>
         </LoginRequestProvider>
     )
