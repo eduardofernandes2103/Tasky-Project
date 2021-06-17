@@ -18,7 +18,6 @@ export const ActivitieProvider = ({ children }) => {
             },
           })
           .then(response => setActivitiesRenderList(response.data.activities))
-        //   .then(response => setGoalsData(response.data.goals))
 
     };
 
